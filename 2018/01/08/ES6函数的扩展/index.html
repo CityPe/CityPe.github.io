@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="ES6函数笔记"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="西河">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="http://citype.github.io/2018/01/08/ES6函数的扩展/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> ES6函数笔记 - 西河 </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">西河</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            首页
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            归档
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">西河</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              首页
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              归档
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          ES6函数笔记
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-01-08
+        </span>
+        
+        
+      </div>
+    </header>
+
+    
+    
+
+    <div class="post-content">
+      
+        <p>以下内容皆根据本人知识盲点摘录，原文：<a href="http://es6.ruanyifeng.com/#docs/string" target="_blank" rel="noopener">ECMAScript 6 入门</a>原文作者：阮一峰</p>
+<p>###函数参数的默认值</p>
+<p>参数变量是默认声明的，所以不能用let或const再次声明。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">function foo(x = 5) &#123;</span><br><span class="line">  let x = 1; // error</span><br><span class="line">  const x = 2; // error</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>参数默认值不是传值的，而是每次都重新计算默认值表达式的值。也就是说，参数默认值是惰性求值的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">let x = 99;</span><br><span class="line">function foo(p = x + 1) &#123;</span><br><span class="line">  console.log(p);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo() // 100</span><br><span class="line"></span><br><span class="line">x = 100;</span><br><span class="line">foo() // 101</span><br></pre></td></tr></table></figure>
+<p>###函数的 length 属性<br>指定了默认值以后，函数的length属性，将返回没有指定默认值的参数个数。也就是说，指定了默认值后，length属性将失真。</p>
+<p>###rest 参数<br>形式：…变量名</p>
+<p>1)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">function add(...values) &#123;</span><br><span class="line">  let sum = 0;</span><br><span class="line"></span><br><span class="line">  for (var val of values) &#123;</span><br><span class="line">    sum += val;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  return sum;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">add(2, 5, 3) // 10</span><br></pre></td></tr></table></figure></p>
+<p>利用 rest 参数，可以向该函数传入任意数目的参数。</p>
+<p>2)rest 参数代替arguments变量的例子<br>arguments对象不是数组，而是一个类似数组的对象<br>arguments对象为了使用数组的方法，必须使用Array.prototype.slice.call先将其转为数组</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// arguments变量的写法</span><br><span class="line">function sortNumbers() &#123;</span><br><span class="line">  return Array.prototype.slice.call(arguments).sort();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// rest参数的写法</span><br><span class="line">const sortNumbers = (...numbers) =&gt; numbers.sort();</span><br></pre></td></tr></table></figure>
+<p>rest 参数就不存在这个问题，它就是一个真正的数组，数组特有的方法都可以使用。<br>下面是一个利用 rest 参数改写数组push方法的例子。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">function push(array, ...items) &#123;</span><br><span class="line">  items.forEach(function(item) &#123;</span><br><span class="line">    array.push(item);</span><br><span class="line">    console.log(item);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var a = [];</span><br><span class="line">push(a, 1, 2, 3)</span><br></pre></td></tr></table></figure>
+<p>注意，rest 参数之后不能再有其他参数（即只能是最后一个参数），否则会报错。<br>函数的length属性，不包括 rest 参数。</p>
+<p>###严格模式<br>只要函数参数使用了默认值、解构赋值、或者扩展运算符，那么函数内部就不能显式设定为严格模式，否则会报错</p>
+<p>例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">// 报错</span><br><span class="line">function doSomething(a, b = a) &#123;</span><br><span class="line">  &apos;use strict&apos;;</span><br><span class="line">  // code</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 报错</span><br><span class="line">const doSomething = function (&#123;a, b&#125;) &#123;</span><br><span class="line">  &apos;use strict&apos;;</span><br><span class="line">  // code</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">// 报错</span><br><span class="line">const doSomething = (...a) =&gt; &#123;</span><br><span class="line">  &apos;use strict&apos;;</span><br><span class="line">  // code</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">const obj = &#123;</span><br><span class="line">  // 报错</span><br><span class="line">  doSomething(&#123;a, b&#125;) &#123;</span><br><span class="line">    &apos;use strict&apos;;</span><br><span class="line">    // code</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>####禁止使用的原因：</p>
+<p>函数内部的严格模式，同时适用于函数体和函数参数。但是，函数执行的时候，先执行函数参数，然后再执行函数体。这样就有一个不合理的地方，只有从函数体之中，才能知道参数是否应该以严格模式执行，但是参数却应该先于函数体执行。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 报错</span><br><span class="line">function doSomething(value = 070) &#123;</span><br><span class="line">  &apos;use strict&apos;;</span><br><span class="line">  return value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>JavaScript 引擎会先成功执行value = 070，然后进入函数体内部，发现需要用严格模式执行，这时才会报错。</p>
+<p>虽然可以先解析函数体代码，再执行参数代码，但是这样无疑就增加了复杂性。因此，标准索性禁止了这种用法，只要参数使用了默认值、解构赋值、或者扩展运算符，就不能显式指定严格模式。</p>
+<p>####规避方法：</p>
+<p>两种方法可以规避这种限制。</p>
+<p>1)第一种是设定全局性的严格模式，这是合法的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&apos;use strict&apos;;</span><br><span class="line"></span><br><span class="line">function doSomething(a, b = a) &#123;</span><br><span class="line">  // code</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>2)把函数包在一个无参数的立即执行函数里面。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">const doSomething = (function () &#123;</span><br><span class="line">  &apos;use strict&apos;;</span><br><span class="line">  return function(value = 42) &#123;</span><br><span class="line">    return value;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;());</span><br></pre></td></tr></table></figure></p>
+<p>###箭头函数<br>ES6 允许使用“箭头”（=&gt;）定义函数。</p>
+<p>1)基础用法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var f = v =&gt; v;</span><br></pre></td></tr></table></figure></p>
+<p>上面的箭头函数等同于：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">var f = function(v) &#123;</span><br><span class="line">  return v;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>2）如果箭头函数不需要参数或需要多个参数，就使用一个圆括号代表参数部分。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">var f = () =&gt; 5;</span><br><span class="line">// 等同于</span><br><span class="line">var f = function () &#123; return 5 &#125;;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var sum = (num1, num2) =&gt; num1 + num2;</span><br><span class="line">// 等同于</span><br><span class="line">var sum = function(num1, num2) &#123;</span><br><span class="line">  return num1 + num2;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>3）如果箭头函数的代码块部分多于一条语句，就要使用大括号将它们括起来，并且使用return语句返回。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var sum = (num1, num2) =&gt; &#123; return num1 + num2; &#125;</span><br></pre></td></tr></table></figure></p>
+<p>由于大括号被解释为代码块，所以如果箭头函数直接返回一个对象，必须在对象外面加上括号，否则会报错。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 报错</span><br><span class="line">let getTempItem = id =&gt; &#123; id: id, name: &quot;Temp&quot; &#125;;</span><br><span class="line"></span><br><span class="line">// 不报错</span><br><span class="line">let getTempItem = id =&gt; (&#123; id: id, name: &quot;Temp&quot; &#125;);</span><br></pre></td></tr></table></figure>
+<p>4）如果箭头函数只有一行语句，且不需要返回值，可以采用下面的写法，就不用写大括号了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let fn = () =&gt; void doesNotReturn();</span><br></pre></td></tr></table></figure>
+<p>5)箭头函数可以与变量解构结合使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">const full = (&#123; first, last &#125;) =&gt; first + &apos; &apos; + last;</span><br><span class="line"></span><br><span class="line">// 等同于</span><br><span class="line">function full(person) &#123;</span><br><span class="line">  return person.first + &apos; &apos; + person.last;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>####箭头函数优势</p>
+<p>1）箭头函数使得表达更加简洁<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">const isEven = n =&gt; n % 2 == 0;</span><br><span class="line">const square = n =&gt; n * n;</span><br></pre></td></tr></table></figure></p>
+<p>2）简化回调函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 正常函数写法</span><br><span class="line">[1,2,3].map(function (x) &#123;</span><br><span class="line">  return x * x;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">// 箭头函数写法</span><br><span class="line">[1,2,3].map(x =&gt; x * x);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 正常函数写法</span><br><span class="line">var result = values.sort(function (a, b) &#123;</span><br><span class="line">  return a - b;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">// 箭头函数写法</span><br><span class="line">var result = values.sort((a, b) =&gt; a - b);</span><br></pre></td></tr></table></figure>
+<p>3)rest 参数与箭头函数结合<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">const numbers = (...nums) =&gt; nums;</span><br><span class="line"></span><br><span class="line">numbers(1, 2, 3, 4, 5)</span><br><span class="line">// [1,2,3,4,5]</span><br><span class="line"></span><br><span class="line">const headAndTail = (head, ...tail) =&gt; [head, tail];</span><br><span class="line"></span><br><span class="line">headAndTail(1, 2, 3, 4, 5)</span><br><span class="line">// [1,[2,3,4,5]]</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="http://citype.github.io">西河</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="http://citype.github.io/2018/01/08/ES6函数的扩展/">http://citype.github.io/2018/01/08/ES6函数的扩展/</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2018/01/08/ES6数组的扩展/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">ES6 数组的扩展笔记</span>
+        <span class="prev-text nav-mobile">上一篇</span>
+      </a>
+    
+    
+      <a class="next" href="/2018/01/08/ES6数值的扩展/">
+        <span class="next-text nav-default">ES6 Math对象扩展笔记</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2015 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">西河</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>
